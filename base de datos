@@ -1,0 +1,128 @@
+create table NIVELFORMACION(
+id int primary key identity(1,1),
+nombre varchar(100));
+
+create table GENERO(
+id int primary key identity(1,1),
+nombre varchar(100));
+
+create table TIPOACTIVIDAD(
+id int primary key identity(1,1),
+nombre varchar(100));
+
+create table TIPOESPECIALIDAD(
+id int primary key identity(1,1),
+nombre varchar(100),
+descripcion varchar(5000));
+
+create table TIPOPOBLACION(
+id int primary key identity(1,1),
+nombre varchar(100),
+descripcion varchar(5000));
+
+create table REDCONOCIMIENTO(
+id varchar(30) primary key,
+nombre varchar(255),
+descripcion varchar(5000) null);
+
+create table PROGRAMA(
+id varchar(30) primary key,
+nombre varchar(300),
+descripcion varchar(5000) null,
+idredconocimiento varchar(30),
+foreign key (idredconocimiento) references REDCONOCIMIENTO(id));
+
+create table FICHA(
+id varchar(20) primary key,
+nombre varchar(300),
+responsable varchar(5000) null,
+idprograma varchar(30),
+foreign key (idprograma) references PROGRAMA(id),
+idnivel int,
+foreign key (idnivel) references NIVELFORMACION(id));
+
+create table PROGRAMABIENESTAR(
+id int primary key identity(1,1),
+nombre varchar(300),
+descripcion varchar(5000) null,
+requisitos varchar(5000) null,
+presupuesto decimal(12,2));
+
+create table ROL(
+id int primary key identity(1,1),
+nombre varchar(100));
+
+create table USUARIO(
+id int primary key identity(1,1),
+password varchar(5000),
+correo varchar(300),
+idrol int,
+foreign key (idrol) references ROL(id));
+
+create table ACTIVIDAD(
+id int primary key identity(1,1),
+nombre varchar(300),
+fecha date,
+lugar varchar(100),
+responsable int,
+foreign key (responsable) references USUARIO(id),
+descripcion varchar(5000),
+idtipoactividad int,
+foreign key (idtipoactividad) references TIPOACTIVIDAD(id));
+--pase eso
+create table ANUNCIO(
+id int primary key identity(1,1),
+nombre varchar(255),
+fecha date,
+descripcion varchar(5000),
+idusuario int,
+foreign key (idusuario) references USUARIO(id));
+
+create table PERSONA(
+id varchar(30) primary key,
+nombre varchar(60),
+apellido varchar(60),
+direccion varchar(255),
+idgenero int,
+foreign key (idgenero) references GENERO(id),
+telefono varchar(20),
+idusuario int,
+foreign key (idusuario) references USUARIO(id),
+idtipopoblacion int,
+foreign key (idtipopoblacion) references TIPOPOBLACION(id));
+
+create table PERSONATIPOESPECIALIDAD(
+id int primary key identity(1,1),
+idpersona varchar(30),
+foreign key (idpersona) references PERSONA(id),
+idtipoespecialidad int,
+foreign key (idtipoespecialidad) references TIPOESPECIALIDAD(id));
+
+create table CONVOCATORIA(
+id int primary key identity(1,1),
+nombre varchar(300),
+fechainicio date,
+fechafin date,
+programabienestar int,
+foreign key (programabienestar) references PROGRAMABIENESTAR(id));
+
+create table APRENDIZFICHA(
+id int primary key identity(1,1),
+idaprendiz varchar(30),
+foreign key (idaprendiz) references PERSONA(id),
+idficha varchar(20),
+foreign key (idficha) references FICHA(id));
+
+create table INSCRIPCION(
+id int primary key identity(1,1),
+fecha date,
+idaprendiz varchar(30),
+foreign key (idaprendiz) references PERSONA(id),
+idconvocatoria int,
+foreign key (idconvocatoria) references CONVOCATORIA(id));
+
+create table BENEFICIARIO(
+id int primary key identity(1,1),
+fecha date,
+idinscripcion int,
+foreign key (idinscripcion) references INSCRIPCION(id));
